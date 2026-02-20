@@ -1,57 +1,36 @@
 @import "tailwindcss";
 
-/* 1. Google Font Import */
+/* 1. Global Font */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
 
-/* 2. Global Resets */
 :root {
   font-family: 'Outfit', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-* {
+/* 2. Prevent Horizontal Scroll on Main Body */
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  overflow-x: hidden;
+  background-color: #f9fafb;
 }
 
-/* 3. Original Global Helper Classes */
-/* Ensure scrollbars can be hidden globally as per your original JS logic */
+/* 3. Original Animations (Moved from Groceries.css to ensure scope) */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.glass-header {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-/* 4. Standard Base Styling */
-body {
-  min-height: 100vh;
-  /* Prevent horizontal scroll issues during animations */
-  overflow-x: hidden; 
-  background-color: #f8fafc; /* Fallback to Store background */
+.zepto-gradient {
+  background: linear-gradient(90deg, #3b0066 0%, #631d99 100%);
 }
 
-/* Fix for Rider Dashboard (Dark Mode conflict) */
-.rider-body {
-  background-color: #020617 !important;
-  color: white;
-}
-
-/* Fix for Tracking Page */
-.tracking-body {
-  background-color: #f8fafc !important;
-}
-
-/* 5. Button and Link consistency */
-button {
-  font-family: 'Outfit', sans-serif;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
+/* 4. Fix for the dense 5-column grid alignment */
+.product-card {
+  height: 100%;
 }

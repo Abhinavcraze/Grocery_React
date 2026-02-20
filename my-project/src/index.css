@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+/* 1. Google Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+
+/* 2. Global Resets */
+:root {
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 3. Original Global Helper Classes */
+/* Ensure scrollbars can be hidden globally as per your original JS logic */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 4. Standard Base Styling */
+body {
+  min-height: 100vh;
+  /* Prevent horizontal scroll issues during animations */
+  overflow-x: hidden; 
+  background-color: #f8fafc; /* Fallback to Store background */
+}
+
+/* Fix for Rider Dashboard (Dark Mode conflict) */
+.rider-body {
+  background-color: #020617 !important;
+  color: white;
+}
+
+/* Fix for Tracking Page */
+.tracking-body {
+  background-color: #f8fafc !important;
+}
+
+/* 5. Button and Link consistency */
+button {
+  font-family: 'Outfit', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

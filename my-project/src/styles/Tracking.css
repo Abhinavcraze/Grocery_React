@@ -1,0 +1,37 @@
+.tracking-body { 
+    font-family: 'Outfit', sans-serif; 
+    background-color: #f8fafc; 
+}
+
+.map-sim {
+    background: url('https://user-images.githubusercontent.com/11453364/110504732-c3619080-80fd-11eb-894c-85942484a6a5.png');
+    background-size: cover;
+    height: 350px;
+    position: relative;
+}
+
+.rider-dot {
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    animation: moveRider 15s linear infinite;
+}
+
+@keyframes moveRider {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(150px, 80px); }
+}
+
+.status-pulse {
+    animation: pulse-tracking 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-tracking { 
+    0%, 100% { opacity: 1; } 
+    50% { opacity: .5; } 
+}
+
+.glass-tracking { 
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+}

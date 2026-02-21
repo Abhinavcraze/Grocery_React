@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Groceries.css';
 import { products } from '../data/products';
@@ -28,6 +28,13 @@ const Store = () => {
     // Calculate total by explicitly converting prices to numbers
     const cartTotal = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
+    const [query, setQuery] = useState("");
+
+    const handleSearch = (e) => {
+        setQuery(e.target.value);
+    };
+
+    
     // --- Logic ---
     const addToCart = (product, selectedPrice) => {
         // Use the selected variant price or the default price
@@ -75,6 +82,17 @@ const Store = () => {
                                 <span>{address}</span>
                             </span>
                         </div>
+                    </div>
+
+                    <div className="flex-1 max-w-xl mx-10 hidden md:block relative">
+                        <input
+                            type="text"
+                            placeholder="Search 5000+ products..."
+                            value={query}
+                            onChange={handleSearch}
+                            className="w-full bg-gray-100 border-none rounded-2xl py-3 px-12 focus:ring-2 focus:ring-green-500 focus:bg-white transition-all outline-none"
+                        />
+                    <i className="fa-solid fa-magnifying-glass absolute left-4 top-4 text-gray-400"></i>
                     </div>
 
                     <div className="flex items-center gap-3">

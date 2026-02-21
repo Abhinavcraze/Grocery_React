@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Groceries.css';
 import { products } from '../data/products';
@@ -24,18 +24,25 @@ const Store = () => {
     const [address, setAddress] = useState(localStorage.getItem('userLocation') || 'Select Location');
     const [walletBalance, setWalletBalance] = useState(parseFloat(localStorage.getItem('userWallet')) || 0);
 
-    const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+    // --- Calculation Fix ---
+    // Calculate total by explicitly converting prices to numbers
+    const cartTotal = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
     // --- Logic ---
     const addToCart = (product, selectedPrice) => {
+        // Use the selected variant price or the default price
+        const priceToUse = selectedPrice || (product.variants ? product.variants[0].p : product.price);
+        
         const newCartItem = {
             id: Date.now() + Math.random(),
-            productId: product.id || product.productId, // Handle both structures
+            productId: product.id || product.productId,
             name: product.name,
-            price: selectedPrice || product.price || product.variants[0].p,
+            price: priceToUse,
             img: product.img
         };
-        setCart([...cart, newCartItem]);
+
+        // Functional update pattern: This is the fix for adding "All Ingredients"
+        setCart(prevCart => [...prevCart, newCartItem]);
     };
 
     const removeFromCart = (index) => {
@@ -46,35 +53,9 @@ const Store = () => {
 
     const processCheckout = () => {
         if (cart.length === 0) return alert("Add items to cart first!");
-        
-        // Save current cart to purchase history for the SmartReorder component
-        saveToPurchaseHistory();
-        
         localStorage.setItem('purchasedItems', JSON.stringify(cart));
         localStorage.setItem('orderTotal', `₹${cartTotal}`);
         navigate('/tracking');
-    };
-
-    const saveToPurchaseHistory = () => {
-        let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
-        cart.forEach(item => {
-            const idx = history.findIndex(h => h.productId === item.productId);
-            if (idx > -1) {
-                history[idx].count += 1;
-            } else {
-                history.push({ ...item, count: 1 });
-            }
-        });
-        localStorage.setItem('purchaseHistory', JSON.stringify(history.slice(0, 10)));
-    };
-
-    const addMoneyToWallet = () => {
-        const amount = prompt("Enter amount to add to Pazhamuthir Wallet:");
-        if (amount && !isNaN(amount)) {
-            const newBal = walletBalance + parseFloat(amount);
-            setWalletBalance(newBal);
-            localStorage.setItem('userWallet', newBal);
-        }
     };
 
     return (
@@ -105,7 +86,7 @@ const Store = () => {
                                 <span className="text-[8px] font-black uppercase opacity-80 tracking-tighter">Wallet</span>
                                 <span className="text-sm font-black italic">₹{walletBalance.toFixed(2)}</span>
                             </div>
-                            <button onClick={addMoneyToWallet} className="w-6 h-6 bg-white text-green-700 rounded-lg flex items-center justify-center hover:bg-green-50 transition-colors shadow-sm active:scale-95">
+                            <button onClick={() => setWalletBalance(prev => prev + 100)} className="w-6 h-6 bg-white text-green-700 rounded-lg flex items-center justify-center hover:bg-green-50 transition-colors shadow-sm active:scale-95">
                                 <i className="fa-solid fa-plus text-[10px]"></i>
                             </button>
                         </div>
@@ -122,11 +103,9 @@ const Store = () => {
             </div>
 
             <main className="max-w-7xl mx-auto px-4 py-8 pb-32">
-                
-                {/* 1. SMART REORDER (Added exactly here) */}
                 <SmartReorder addToCart={addToCart} />
 
-                {/* 2. KITCHEN HUB */}
+                {/* Kitchen Hub Toggle */}
                 <div className="mt-8">
                     <button onClick={() => setIsKitchenOpen(!isKitchenOpen)} className="w-full bg-gradient-to-r from-green-700 to-green-900 rounded-[2.5rem] p-6 text-white flex items-center justify-between shadow-xl hover:scale-[1.01] transition-all group">
                         <div className="flex items-center gap-6">
@@ -144,10 +123,9 @@ const Store = () => {
 
                 {isKitchenOpen && <KitchenSection addToCart={addToCart} />}
 
-                {/* 3. FLASH SALE */}
                 <FlashSale addToCart={addToCart} />
 
-                {/* 4. CATEGORY FILTERS */}
+                {/* Category Filters */}
                 <div className="bg-white border-b border-gray-100 sticky top-[73px] z-40 py-4 mb-8 flex gap-3 overflow-x-auto no-scrollbar">
                     {['All', 'Fresh Produce', 'Dairy', 'Bakery', 'Pantry', 'Meat', 'Snacks', 'Frozen', 'Household'].map(cat => (
                         <button 
@@ -160,7 +138,7 @@ const Store = () => {
                     ))}
                 </div>
 
-                {/* 5. PRODUCT GRID */}
+                {/* Product Grid */}
                 <div id="product-container" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     {products.filter(p => currentCat === 'All' || p.cat === currentCat).map(p => (
                         <ProductCard key={p.id} product={p} onAdd={addToCart} />
@@ -170,7 +148,7 @@ const Store = () => {
 
             <Footer />
 
-            {/* Sticky Cart Footer */}
+            {/* Footer Cart Bar - Dynamic Totals */}
             {cart.length > 0 && (
                 <div id="cart-footer" className="fixed bottom-0 w-full bg-white border-t border-gray-100 p-4 z-50 shadow-2xl animate-in slide-in-from-bottom">
                     <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -178,7 +156,7 @@ const Store = () => {
                             <div className="bg-green-100 text-green-600 p-3 rounded-xl"><i className="fa-solid fa-bag-shopping"></i></div>
                             <div>
                                 <p className="text-xs font-black text-gray-400 uppercase tracking-widest">{cart.length} ITEMS</p>
-                                <p className="text-lg font-black text-gray-900">₹{cartTotal}</p>
+                                <p className="text-lg font-black text-gray-900">₹{cartTotal.toFixed(2)}</p>
                             </div>
                         </div>
                         <button onClick={() => setIsCartOpen(true)} className="bg-green-600 text-white px-10 py-4 rounded-2xl font-black text-sm transition-transform active:scale-95">VIEW CART <i className="fa-solid fa-chevron-right text-[10px]"></i></button>
@@ -193,7 +171,6 @@ const Store = () => {
     );
 };
 
-// Sub Components
 const ProductCard = ({ product, onAdd }) => {
     const [selectedPrice, setSelectedPrice] = useState(product.variants[0].p);
     return (
@@ -221,15 +198,15 @@ const Footer = () => (
             <div className="grid grid-cols-1 md:grid-cols-12 gap-10 border-b border-gray-100 pb-16">
                 <div className="md:col-span-4">
                     <h4 className="font-bold text-gray-900 mb-6 text-lg">Useful Links</h4>
-                    <div className="grid grid-cols-3 gap-4 text-sm text-gray-500">
+                    <div className="grid grid-cols-3 gap-4 text-sm text-gray-500 text-left">
                         <ul className="space-y-3"><li>Blog</li><li>Privacy</li><li>Terms</li></ul>
                         <ul className="space-y-3"><li>FAQs</li><li>Security</li><li>Contact</li></ul>
                         <ul className="space-y-3"><li>Partner</li><li>Franchise</li><li>Deliver</li></ul>
                     </div>
                 </div>
                 <div className="md:col-span-8">
-                    <h4 className="font-bold text-gray-900 text-lg mb-6">Categories <span className="text-green-600 text-sm ml-2 cursor-pointer hover:underline">see all</span></h4>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-sm text-gray-500">
+                    <h4 className="font-bold text-gray-900 text-lg mb-6 text-left">Categories <span className="text-green-600 text-sm ml-2 cursor-pointer">see all</span></h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-sm text-gray-500 text-left">
                         <ul className="space-y-2"><li>Fruits & Veggies</li><li>Dairy & Eggs</li></ul>
                         <ul className="space-y-2"><li>Pantry Staples</li><li>Meat & Seafood</li></ul>
                         <ul className="space-y-2"><li>Frozen Foods</li><li>Household</li></ul>

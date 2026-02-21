@@ -29,16 +29,15 @@ const Store = () => {
     // --- Logic ---
     const addToCart = (product, selectedPrice) => {
         const newCartItem = {
-            id: Date.now() + Math.random(), // Unique ID for key mapping
-            productId: product.id,
+            id: Date.now() + Math.random(),
+            productId: product.id || product.productId, // Handle both structures
             name: product.name,
-            price: selectedPrice || product.variants[0].p,
+            price: selectedPrice || product.price || product.variants[0].p,
             img: product.img
         };
         setCart([...cart, newCartItem]);
     };
 
-    // FIX: Explicitly defined removeFromCart function
     const removeFromCart = (index) => {
         const newCart = [...cart];
         newCart.splice(index, 1);
@@ -47,9 +46,26 @@ const Store = () => {
 
     const processCheckout = () => {
         if (cart.length === 0) return alert("Add items to cart first!");
+        
+        // Save current cart to purchase history for the SmartReorder component
+        saveToPurchaseHistory();
+        
         localStorage.setItem('purchasedItems', JSON.stringify(cart));
         localStorage.setItem('orderTotal', `₹${cartTotal}`);
         navigate('/tracking');
+    };
+
+    const saveToPurchaseHistory = () => {
+        let history = JSON.parse(localStorage.getItem('purchaseHistory')) || [];
+        cart.forEach(item => {
+            const idx = history.findIndex(h => h.productId === item.productId);
+            if (idx > -1) {
+                history[idx].count += 1;
+            } else {
+                history.push({ ...item, count: 1 });
+            }
+        });
+        localStorage.setItem('purchaseHistory', JSON.stringify(history.slice(0, 10)));
     };
 
     const addMoneyToWallet = () => {
@@ -63,6 +79,7 @@ const Store = () => {
 
     return (
         <div className="bg-gray-50 text-gray-900 font-['Outfit'] min-h-screen">
+            {/* Header */}
             <header className="glass-header sticky top-0 z-50 border-b border-gray-100 px-4 py-3">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-8">
@@ -77,12 +94,6 @@ const Store = () => {
                                 <span>{address}</span>
                             </span>
                         </div>
-                    </div>
-
-                    <div className="flex-1 max-w-xl mx-10 hidden md:block relative">
-                        <input type="text" placeholder="Search 5000+ products..."
-                            className="w-full bg-gray-100 border-none rounded-2xl py-3 px-12 focus:ring-2 focus:ring-green-500 focus:bg-white transition-all" />
-                        <i className="fa-solid fa-magnifying-glass absolute left-4 top-4 text-gray-400"></i>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -100,7 +111,7 @@ const Store = () => {
                         </div>
                         <button onClick={() => setIsCartOpen(true)} className="bg-green-600 text-white px-4 py-2.5 rounded-xl font-black text-sm shadow-md flex items-center gap-2 hover:bg-green-700 transition-all active:scale-95">
                             <i className="fa-solid fa-cart-shopping text-xs"></i>
-                            <span id="cart-count" className="bg-white/20 px-1.5 rounded-md min-w-[18px]">{cart.length}</span>
+                            <span className="bg-white/20 px-1.5 rounded-md min-w-[18px]">{cart.length}</span>
                         </button>
                     </div>
                 </div>
@@ -111,11 +122,17 @@ const Store = () => {
             </div>
 
             <main className="max-w-7xl mx-auto px-4 py-8 pb-32">
+                
+                {/* 1. SMART REORDER (Added exactly here) */}
                 <SmartReorder addToCart={addToCart} />
+
+                {/* 2. KITCHEN HUB */}
                 <div className="mt-8">
                     <button onClick={() => setIsKitchenOpen(!isKitchenOpen)} className="w-full bg-gradient-to-r from-green-700 to-green-900 rounded-[2.5rem] p-6 text-white flex items-center justify-between shadow-xl hover:scale-[1.01] transition-all group">
                         <div className="flex items-center gap-6">
-                            <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center text-3xl group-hover:rotate-12 transition-transform"><i className="fa-solid fa-kitchen-set text-green-400"></i></div>
+                            <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center text-3xl group-hover:rotate-12 transition-transform">
+                                <i className="fa-solid fa-kitchen-set text-green-400"></i>
+                            </div>
                             <div className="text-left">
                                 <h3 className="text-2xl font-black italic tracking-tighter">PAZHAMUTHIR <span className="text-green-400">KITCHEN</span></h3>
                                 <p className="text-xs font-bold opacity-70 uppercase tracking-widest">Get recipes & ingredients in 1-click</p>
@@ -124,15 +141,26 @@ const Store = () => {
                         <div className="flex items-center gap-3 bg-white/10 px-6 py-3 rounded-2xl font-black text-sm uppercase">Explore <i className={`fa-solid ${isKitchenOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i></div>
                     </button>
                 </div>
+
                 {isKitchenOpen && <KitchenSection addToCart={addToCart} />}
+
+                {/* 3. FLASH SALE */}
                 <FlashSale addToCart={addToCart} />
+
+                {/* 4. CATEGORY FILTERS */}
                 <div className="bg-white border-b border-gray-100 sticky top-[73px] z-40 py-4 mb-8 flex gap-3 overflow-x-auto no-scrollbar">
                     {['All', 'Fresh Produce', 'Dairy', 'Bakery', 'Pantry', 'Meat', 'Snacks', 'Frozen', 'Household'].map(cat => (
-                        <button key={cat} onClick={() => setCurrentCat(cat)} className={`category-pill border px-6 py-2 rounded-full whitespace-nowrap font-bold text-sm transition-all ${currentCat === cat ? 'active bg-green-600 text-white' : 'bg-white'}`}>
+                        <button 
+                            key={cat}
+                            onClick={() => setCurrentCat(cat)}
+                            className={`category-pill border px-6 py-2 rounded-full whitespace-nowrap font-bold text-sm transition-all ${currentCat === cat ? 'active bg-green-600 text-white' : 'bg-white'}`}
+                        >
                             {cat === 'Fresh Produce' ? 'Fruits & Veggies' : cat === 'Dairy' ? 'Dairy & Eggs' : cat}
                         </button>
                     ))}
                 </div>
+
+                {/* 5. PRODUCT GRID */}
                 <div id="product-container" className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     {products.filter(p => currentCat === 'All' || p.cat === currentCat).map(p => (
                         <ProductCard key={p.id} product={p} onAdd={addToCart} />
@@ -142,6 +170,7 @@ const Store = () => {
 
             <Footer />
 
+            {/* Sticky Cart Footer */}
             {cart.length > 0 && (
                 <div id="cart-footer" className="fixed bottom-0 w-full bg-white border-t border-gray-100 p-4 z-50 shadow-2xl animate-in slide-in-from-bottom">
                     <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -152,7 +181,7 @@ const Store = () => {
                                 <p className="text-lg font-black text-gray-900">₹{cartTotal}</p>
                             </div>
                         </div>
-                        <button onClick={() => setIsCartOpen(true)} className="bg-green-600 text-white px-10 py-4 rounded-2xl font-black text-sm">VIEW CART <i className="fa-solid fa-chevron-right text-[10px]"></i></button>
+                        <button onClick={() => setIsCartOpen(true)} className="bg-green-600 text-white px-10 py-4 rounded-2xl font-black text-sm transition-transform active:scale-95">VIEW CART <i className="fa-solid fa-chevron-right text-[10px]"></i></button>
                     </div>
                 </div>
             )}
@@ -164,6 +193,7 @@ const Store = () => {
     );
 };
 
+// Sub Components
 const ProductCard = ({ product, onAdd }) => {
     const [selectedPrice, setSelectedPrice] = useState(product.variants[0].p);
     return (
@@ -200,23 +230,10 @@ const Footer = () => (
                 <div className="md:col-span-8">
                     <h4 className="font-bold text-gray-900 text-lg mb-6">Categories <span className="text-green-600 text-sm ml-2 cursor-pointer hover:underline">see all</span></h4>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-3 text-sm text-gray-500">
-                        <ul className="space-y-2"><li>Fruits & Veggies</li><li>Dairy & Eggs</li><li>Bakery & Biscuits</li></ul>
-                        <ul className="space-y-2"><li>Pantry Staples</li><li>Meat & Seafood</li><li>Snacks & Beverages</li></ul>
-                        <ul className="space-y-2"><li>Frozen Foods</li><li>Household Essentials</li></ul>
+                        <ul className="space-y-2"><li>Fruits & Veggies</li><li>Dairy & Eggs</li></ul>
+                        <ul className="space-y-2"><li>Pantry Staples</li><li>Meat & Seafood</li></ul>
+                        <ul className="space-y-2"><li>Frozen Foods</li><li>Household</li></ul>
                     </div>
-                </div>
-            </div>
-            <div className="flex flex-col md:flex-row items-center justify-between py-10 gap-8">
-                <div className="text-sm text-gray-500 font-medium order-3 md:order-1">© Pazhamuthir Fresh Commerce Pvt. Ltd., 2016-2026</div>
-                <div className="flex items-center gap-4 order-1 md:order-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" className="h-10 cursor-pointer"/>
-                </div>
-                <div className="flex items-center gap-4 order-2 md:order-3">
-                    {['facebook-f', 'x-twitter', 'instagram', 'linkedin-in'].map(icon => (
-                        <div key={icon} className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform cursor-pointer shadow-md">
-                            <i className={`fa-brands fa-${icon}`}></i>
-                        </div>
-                    ))}
                 </div>
             </div>
         </div>

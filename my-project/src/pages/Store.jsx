@@ -34,7 +34,6 @@ const Store = () => {
         setQuery(e.target.value);
     };
 
-    
     // --- Logic ---
     const addToCart = (product, selectedPrice) => {
         // Use the selected variant price or the default price

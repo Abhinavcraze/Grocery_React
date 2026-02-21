@@ -55,7 +55,7 @@ const Landing = () => {
                         <div className="bg-green-600 p-2 rounded-xl text-white">
                             <i className="fa-solid fa-leaf text-xl"></i>
                         </div>
-                        <h1 className="text-2xl font-black text-green-800 tracking-tighter">PAZHAMUTHIR</h1>
+                        <h1 className="text-2xl font- black text-green-800 tracking-tighter">PAZHAMUTHIR</h1>
                     </div>
                     <div className="hidden md:flex gap-8 font-bold text-gray-600">
                         <a href="#features" className="hover:text-green-600">Features</a>

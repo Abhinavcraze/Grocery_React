@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Groceries.css';
 import { products } from '../data/products';
@@ -14,6 +14,9 @@ import ProfileDrawer from '../components/ProfileDrawer';
 const Store = () => {
     const navigate = useNavigate();
     
+    
+
+
     // --- State Management ---
     const [cart, setCart] = useState([]);
     const [currentCat, setCurrentCat] = useState('All');
@@ -145,23 +148,41 @@ const Store = () => {
                 {/* Category Filters */}
                 {/* Category Filters - Now with smooth horizontal scrolling */}
                 {/* Category Filters - Fix: added flex-nowrap, flex-shrink-0, and px-4 */}
-                <div className="bg-white border-b border-gray-100 sticky top-[73px] z-40 py-4 mb-8 flex flex-nowrap gap-3 overflow-x-auto no-scrollbar scroll-smooth px-2">
-                    {['All', 'Fresh Produce', 'Dairy', 'Bakery', 'Pantry', 'Meat', 'Snacks', 'Frozen', 'Household', 'Personal Care', 'Breakfast', 'Baby Care'].map(cat => (
-                        <button 
-                            key={cat}
-                            onClick={() => setCurrentCat(cat)}
-                            className={`category-pill border px-6 py-2 rounded-full whitespace-nowrap font-bold text-sm transition-all flex-shrink-0 ${
-                                currentCat === cat 
-                                ? 'active bg-green-600 text-white border-green-600 shadow-sm' 
-                                : 'bg-white text-gray-700 hover:border-green-500'
-                            }`}
-                        >
-                            {/* Improved Display Mapping */}
-                            {cat === 'Fresh Produce' ? 'Fruits & Veggies' : 
-                            cat === 'Dairy' ? 'Dairy & Eggs' : 
-                            cat === 'Breakfast' ? 'Breakfast & Cereals' : cat}
-                        </button>
-                    ))}
+                {/* Category Filters - Complete Horizontal Scroll with Full Labels */}
+                {/* Category Filters with Visible Scrollbar */}
+                <div className="bg-white border-b border-gray-100 sticky top-[73px] z-40 pt-4 pb-6 mb-8 flex flex-nowrap gap-3 overflow-x-auto custom-scrollbar scroll-smooth px-4">
+                    {['All', ...new Set(products.map(p => p.cat))].map(cat => {
+                        const labelMap = {
+                            'All': 'All Products',
+                            'Fresh Produce': 'Fruits & Veggies',
+                            'Dairy': 'Dairy & Eggs',
+                            'Bakery': 'Fresh Bakery',
+                            'Pantry': 'Pantry Staples',
+                            'Meat': 'Meat & Seafood',
+                            'Snacks': 'Snacks & Drinks',
+                            'Frozen': 'Frozen Foods',
+                            'Household': 'Household Needs',
+                            'Personal Care': 'Personal Care',
+                            'Breakfast': 'Breakfast & Cereals',
+                            'Baby Care': 'Baby & Kids'
+                        };
+
+                        const displayLabel = labelMap[cat] || cat;
+
+                        return (
+                            <button 
+                                key={cat}
+                                onClick={() => setCurrentCat(cat)}
+                                className={`category-pill border px-6 py-2.5 rounded-full whitespace-nowrap font-bold text-sm transition-all flex-shrink-0 ${
+                                    currentCat === cat 
+                                    ? 'active bg-green-600 text-white border-green-600 shadow-lg shadow-green-100' 
+                                    : 'bg-white text-gray-700 hover:border-green-500 border-gray-200'
+                                }`}
+                            >
+                                {displayLabel}
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Product Grid */}

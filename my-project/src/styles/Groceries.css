@@ -41,6 +41,21 @@ body {
     backdrop-filter: blur(12px);
 }
 
+/* Add this to your ../styles/Groceries.css */
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+}
+
+
 /* Drawer Logic */
 .profile-drawer {
     transform: translateX(100%);

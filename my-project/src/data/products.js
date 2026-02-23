@@ -94,7 +94,38 @@ export const products = [
     { id: 85, cat: 'Household', name: 'Hand Wash Refill', rating: 4.8, reviews: '20k', img: 'https://loremflickr.com/400/400/handwash,soap/all', variants: [{ q: '750ml', p: 185 }] },
     { id: 86, cat: 'Household', name: 'Glass Cleaner Spray', rating: 4.6, reviews: '4k', img: 'https://loremflickr.com/400/400/glasscleaner,spray/all', variants: [{ q: '500ml', p: 95 }] },
     { id: 87, cat: 'Household', name: 'Air Freshener Spray', rating: 4.4, reviews: '6k', img: 'https://loremflickr.com/400/400/freshener,spray/all', variants: [{ q: '300ml', p: 150 }] },
-    { id: 88, cat: 'Household', name: 'Scrub Pads (Pack of 3)', rating: 4.9, reviews: '15k', img: 'https://loremflickr.com/400/400/scrub,cleaning/all', variants: [{ q: '3 Units', p: 45 }] }
+    { id: 88, cat: 'Household', name: 'Scrub Pads (Pack of 3)', rating: 4.9, reviews: '15k', img: 'https://loremflickr.com/400/400/scrub,cleaning/all', variants: [{ q: '3 Units', p: 45 }] },
+
+        // --- PERSONAL CARE (10 Items) ---
+    { id: 89, cat: 'Personal Care', name: 'Aloe Vera Shampoo', rating: 4.6, reviews: '3k', img: 'https://loremflickr.com/400/400/shampoo,bottle/all', variants: [{ q: '340ml', p: 220 }] },
+    { id: 90, cat: 'Personal Care', name: 'Herbal Conditioner', rating: 4.5, reviews: '2k', img: 'https://loremflickr.com/400/400/conditioner,bottle/all', variants: [{ q: '300ml', p: 210 }] },
+    { id: 91, cat: 'Personal Care', name: 'Toothpaste (Mint)', rating: 4.8, reviews: '10k', img: 'https://loremflickr.com/400/400/toothpaste,dental/all', variants: [{ q: '150g', p: 95 }] },
+    { id: 92, cat: 'Personal Care', name: 'Toothbrush (Soft)', rating: 4.7, reviews: '6k', img: 'https://loremflickr.com/400/400/toothbrush,dental/all', variants: [{ q: '1 Unit', p: 35 }] },
+    { id: 93, cat: 'Personal Care', name: 'Body Lotion', rating: 4.6, reviews: '4k', img: 'https://loremflickr.com/400/400/lotion,skincare/all', variants: [{ q: '400ml', p: 280 }] },
+    { id: 94, cat: 'Personal Care', name: 'Face Wash', rating: 4.5, reviews: '5k', img: 'https://loremflickr.com/400/400/facewash,skincare/all', variants: [{ q: '150ml', p: 180 }] },
+    { id: 95, cat: 'Personal Care', name: 'Bath Soap (Pack of 4)', rating: 4.9, reviews: '12k', img: 'https://loremflickr.com/400/400/soap,bar/all', variants: [{ q: '4 Units', p: 120 }] },
+    { id: 96, cat: 'Personal Care', name: 'Deodorant Spray', rating: 4.4, reviews: '7k', img: 'https://loremflickr.com/400/400/deodorant,spray/all', variants: [{ q: '150ml', p: 199 }] },
+    { id: 97, cat: 'Personal Care', name: 'Hand Sanitizer', rating: 4.8, reviews: '9k', img: 'https://loremflickr.com/400/400/sanitizer,bottle/all', variants: [{ q: '500ml', p: 150 }] },
+    { id: 98, cat: 'Personal Care', name: 'Shaving Cream', rating: 4.5, reviews: '3k', img: 'https://loremflickr.com/400/400/shaving,cream/all', variants: [{ q: '200g', p: 160 }] },
+
+    // --- BREAKFAST & CEREALS (10 Items) ---
+    { id: 99, cat: 'Breakfast', name: 'Corn Flakes', rating: 4.7, reviews: '8k', img: 'https://loremflickr.com/400/400/cornflakes,cereal/all', variants: [{ q: '500g', p: 180 }] },
+    { id: 100, cat: 'Breakfast', name: 'Choco Cereal Balls', rating: 4.8, reviews: '6k', img: 'https://loremflickr.com/400/400/chococereal,bowl/all', variants: [{ q: '375g', p: 210 }] },
+    { id: 101, cat: 'Breakfast', name: 'Oats (Rolled)', rating: 4.9, reviews: '11k', img: 'https://loremflickr.com/400/400/oats,bowl/all', variants: [{ q: '1kg', p: 165 }] },
+    { id: 102, cat: 'Breakfast', name: 'Peanut Butter (Crunchy)', rating: 4.6, reviews: '5k', img: 'https://loremflickr.com/400/400/peanutbutter,jar/all', variants: [{ q: '340g', p: 250 }] },
+    { id: 103, cat: 'Breakfast', name: 'Strawberry Jam', rating: 4.5, reviews: '4k', img: 'https://loremflickr.com/400/400/jam,jar/all', variants: [{ q: '500g', p: 140 }] },
+    { id: 104, cat: 'Breakfast', name: 'Honey (Pure)', rating: 4.8, reviews: '9k', img: 'https://loremflickr.com/400/400/honey,jar/all', variants: [{ q: '500g', p: 320 }] },
+    { id: 105, cat: 'Breakfast', name: 'Maple Syrup', rating: 4.6, reviews: '2k', img: 'https://loremflickr.com/400/400/maplesyrup,bottle/all', variants: [{ q: '250ml', p: 450 }] },
+    { id: 106, cat: 'Breakfast', name: 'Instant Poha Mix', rating: 4.4, reviews: '1.5k', img: 'https://loremflickr.com/400/400/poha,indianfood/all', variants: [{ q: '200g', p: 60 }] },
+    { id: 107, cat: 'Breakfast', name: 'Upma Mix', rating: 4.3, reviews: '1k', img: 'https://loremflickr.com/400/400/upma,indianfood/all', variants: [{ q: '200g', p: 55 }] },
+    { id: 108, cat: 'Breakfast', name: 'Muesli (Fruit & Nut)', rating: 4.7, reviews: '3k', img: 'https://loremflickr.com/400/400/muesli,bowl/all', variants: [{ q: '500g', p: 290 }] },
+
+    // --- BABY CARE (5 Items) ---
+    { id: 109, cat: 'Baby Care', name: 'Baby Diapers (M)', rating: 4.9, reviews: '14k', img: 'https://loremflickr.com/400/400/diapers,baby/all', variants: [{ q: '54 Units', p: 699 }] },
+    { id: 110, cat: 'Baby Care', name: 'Baby Wipes', rating: 4.8, reviews: '12k', img: 'https://loremflickr.com/400/400/babywipes,pack/all', variants: [{ q: '72 Wipes', p: 120 }] },
+    { id: 111, cat: 'Baby Care', name: 'Baby Lotion', rating: 4.7, reviews: '5k', img: 'https://loremflickr.com/400/400/babylotion,bottle/all', variants: [{ q: '200ml', p: 210 }] },
+    { id: 112, cat: 'Baby Care', name: 'Baby Shampoo', rating: 4.6, reviews: '3k', img: 'https://loremflickr.com/400/400/babyshampoo,bottle/all', variants: [{ q: '200ml', p: 190 }] },
+    { id: 113, cat: 'Baby Care', name: 'Cerelac Baby Food', rating: 4.9, reviews: '8k', img: 'https://loremflickr.com/400/400/babyfood,cereal/all', variants: [{ q: '300g', p: 280 }] }
 ];
 
 // --- KITCHEN RECIPES ---

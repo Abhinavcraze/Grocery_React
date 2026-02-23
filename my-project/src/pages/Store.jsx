@@ -143,14 +143,23 @@ const Store = () => {
                 <FlashSale addToCart={addToCart} />
 
                 {/* Category Filters */}
-                <div className="bg-white border-b border-gray-100 sticky top-[73px] z-40 py-4 mb-8 flex gap-3 overflow-x-auto no-scrollbar">
-                    {['All', 'Fresh Produce', 'Dairy', 'Bakery', 'Pantry', 'Meat', 'Snacks', 'Frozen', 'Household'].map(cat => (
+                {/* Category Filters - Now with smooth horizontal scrolling */}
+                {/* Category Filters - Fix: added flex-nowrap, flex-shrink-0, and px-4 */}
+                <div className="bg-white border-b border-gray-100 sticky top-[73px] z-40 py-4 mb-8 flex flex-nowrap gap-3 overflow-x-auto no-scrollbar scroll-smooth px-2">
+                    {['All', 'Fresh Produce', 'Dairy', 'Bakery', 'Pantry', 'Meat', 'Snacks', 'Frozen', 'Household', 'Personal Care', 'Breakfast', 'Baby Care'].map(cat => (
                         <button 
                             key={cat}
                             onClick={() => setCurrentCat(cat)}
-                            className={`category-pill border px-6 py-2 rounded-full whitespace-nowrap font-bold text-sm transition-all ${currentCat === cat ? 'active bg-green-600 text-white' : 'bg-white'}`}
+                            className={`category-pill border px-6 py-2 rounded-full whitespace-nowrap font-bold text-sm transition-all flex-shrink-0 ${
+                                currentCat === cat 
+                                ? 'active bg-green-600 text-white border-green-600 shadow-sm' 
+                                : 'bg-white text-gray-700 hover:border-green-500'
+                            }`}
                         >
-                            {cat === 'Fresh Produce' ? 'Fruits & Veggies' : cat === 'Dairy' ? 'Dairy & Eggs' : cat}
+                            {/* Improved Display Mapping */}
+                            {cat === 'Fresh Produce' ? 'Fruits & Veggies' : 
+                            cat === 'Dairy' ? 'Dairy & Eggs' : 
+                            cat === 'Breakfast' ? 'Breakfast & Cereals' : cat}
                         </button>
                     ))}
                 </div>
